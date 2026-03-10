@@ -36,10 +36,10 @@ const data = {
   },
   navMain: [
     { title: "Dashboard", url: "/dashboard", icon: IconDashboard },
-    { title: "Watchlist", url: "#", icon: IconTrendingUp },
-    { title: "Options Scanner", url: "#", icon: IconChartBar },
-    { title: "AI Insights", url: "#", icon: IconRobot },
-    { title: "Strategies", url: "#", icon: IconSword },
+    { title: "Scanner", url: "/scanner", icon: IconChartBar },
+    { title: "Options Chain", url: "/options", icon: IconTrendingUp },
+    { title: "Journal", url: "/journal", icon: IconRobot },
+    { title: "Risk", url: "/risk", icon: IconSword },
   ],
   navClouds: [],
   navSecondary: [
@@ -49,7 +49,7 @@ const data = {
   ],
   documents: [
     { name: "Open Positions", url: "#", icon: IconTrendingUp },
-    { name: "Trade History", url: "#", icon: IconChartBar },
+    { name: "Trade History", url: "/journal", icon: IconChartBar },
   ],
 }
 
@@ -63,7 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href="/dashboard">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Quantify</span>
               </a>

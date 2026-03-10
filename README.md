@@ -4,16 +4,27 @@ AI-powered trading dashboard for smarter short-term options and stock decisions.
 
 ## What it is
 
-- **Dashboard**: Portfolio summary, today’s P&L, open positions, win rate
-- **Portfolio vs SPY**: Simple chart of portfolio value vs SPY over time
-- **Positions / ideas table**: Symbol, type (Call/Put), status, strike, premium, AI signal — sortable, filterable, reorderable
-- **Navigation**: Watchlist, Options Scanner, AI Insights, Strategies (ready for future pages)
+- **Dashboard**: SPY/QQQ price, VIX, expected move (1W); SPY + expected move band chart
+- **Scanner**: Bull Put, Bear Call, Iron Condor with credit, max risk, probability of profit, risk/reward; quick filters
+- **Options Chain**: Full chain table with Build Spread / Add to Strategy
+- **Journal**: Log trades; win rate, avg return, max drawdown
+- **Risk**: Capital, open risk, P/L chart, risk exposure pie
 
 ## Stack
 
-- Next.js 15, React 19, TypeScript
-- shadcn/ui, Tailwind, Recharts
-- Template: quanttemplate (dashboard layout + data table)
+- Next.js 15 (App Router), React 19, TypeScript
+- shadcn/ui, Tailwind, Recharts, Zustand
+
+## App structure
+
+- **app/dashboard** — Market overview: SPY/QQQ/VIX/Expected Move KPIs + SPY expected move band chart
+- **app/scanner** — Strategy scanner: ticker, max risk, min probability, DTE → Bull Put / Bear Call / Iron Condor; sort by High Probability, High Credit, Low Risk
+- **app/options** — Options chain: strike, bid, ask, delta, IV, volume, OI; Build Spread / Add to Strategy
+- **app/journal** — Trade journal: log trades; win rate, avg return, max drawdown; history table
+- **app/risk** — Risk dashboard: capital, open risk, max risk/trade, profit this month, win rate; P/L chart, risk pie
+- **lib/calculations** — `options.ts` (expected move, POP, spread math), `scanner.ts`
+- **lib/market** — Mock data (SPY, QQQ, IWM + option chains)
+- **lib/store** — Zustand (journal entries, risk snapshot)
 
 ## Run locally
 
