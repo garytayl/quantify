@@ -43,7 +43,7 @@ export default async function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 px-4 lg:px-6">
+      <div className="min-w-0 space-y-6 px-4 sm:px-4 lg:px-6">
         {!hasData ? (
           <Card className="border-primary/20 bg-card">
             <CardHeader>
@@ -80,15 +80,15 @@ export default async function DashboardPage() {
               <p className="text-muted-foreground mb-2 text-xs font-medium uppercase tracking-wide">
                 Symbols — click for chart & details
               </p>
-              <div className="grid gap-4 @xl/main:grid-cols-2 @4xl/main:grid-cols-4">
+              <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 @xl/main:grid-cols-2 @4xl/main:grid-cols-4">
                 {quotes.map((q) => (
                   <StockCard key={q.symbol} quote={q} />
                 ))}
               </div>
             </div>
 
-            <div className="grid gap-4 @xl/main:grid-cols-2 @4xl/main:grid-cols-4">
-              <Card className="border-border/50 bg-card">
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 @xl/main:grid-cols-2 @4xl/main:grid-cols-4">
+              <Card className="border-border/50 min-w-0 bg-card">
                 <CardHeader className="pb-1">
                   <p className="text-muted-foreground text-xs font-medium uppercase">VIX</p>
                 </CardHeader>
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
                   <p className="text-muted-foreground text-xs">CBOE Volatility (not from Polygon)</p>
                 </CardContent>
               </Card>
-              <Card className="border-border/50 bg-card">
+              <Card className="border-border/50 min-w-0 bg-card">
                 <CardHeader className="pb-1">
                   <p className="text-muted-foreground text-xs font-medium uppercase">Expected move (1W)</p>
                 </CardHeader>
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
               </Card>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid min-w-0 gap-4 lg:grid-cols-2">
               <MarketModeWidget mode={marketMode} />
               <StrategySuggestionsWidget
                 strategies={strategySuggestions}

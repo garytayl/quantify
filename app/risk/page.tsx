@@ -33,8 +33,8 @@ export default function RiskPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 px-4 lg:px-6">
-        <div className="grid gap-4 @xl/main:grid-cols-2 @4xl/main:grid-cols-5">
+      <div className="min-w-0 space-y-6 px-4 lg:px-6">
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 @xl/main:grid-cols-2 @4xl/main:grid-cols-5">
           <KpiCard title="Total Capital" value={`$${risk.totalCapital.toLocaleString()}`} />
           <KpiCard title="Open Risk" value={`$${risk.openRisk.toLocaleString()}`} />
           <KpiCard title="Max Risk per Trade" value={`$${risk.maxRiskPerTrade}`} />
@@ -47,20 +47,20 @@ export default function RiskPage() {
           <KpiCard title="Win Rate" value={`${(risk.winRate * 100).toFixed(0)}%`} />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-border/50 bg-card">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+          <Card className="border-border/50 min-w-0 bg-card">
             <CardHeader>
               <CardTitle>P/L Over Time</CardTitle>
               <CardDescription>Realized P/L by month from journal.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[240px] w-full">
+              <div className="h-[240px] min-h-[240px] w-full min-w-0">
                 {plChartData.length === 0 ? (
                   <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
                     No P/L data yet. Log trades in Journal.
                   </div>
                 ) : (
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height={240} minHeight={240}>
                     <AreaChart data={plChartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
                       <XAxis dataKey="month" tickLine={false} axisLine={false} />
@@ -87,14 +87,14 @@ export default function RiskPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 bg-card">
+          <Card className="border-border/50 min-w-0 bg-card">
             <CardHeader>
               <CardTitle>Risk Exposure</CardTitle>
               <CardDescription>Open risk vs available capital.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[240px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="h-[240px] min-h-[240px] w-full min-w-0">
+                <ResponsiveContainer width="100%" height={240} minHeight={240}>
                   <PieChart>
                     <Pie
                       data={riskPieData}

@@ -51,7 +51,7 @@ export function StockPriceChart({ data, ticker }: StockPriceChartProps) {
   }
 
   return (
-    <Card className="border-border/50 bg-card">
+    <Card className="border-border/50 min-w-0 bg-card">
       <CardHeader>
         <CardTitle className="text-base">{ticker} Price</CardTitle>
         <CardDescription>Daily close (last 30 days)</CardDescription>

@@ -114,9 +114,9 @@ function OptionsPageContent() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <select
-                className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+                className="border-input bg-background h-10 min-h-[44px] rounded-md border px-3 text-base sm:h-9 sm:min-h-0 sm:text-sm"
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value as Ticker)}
               >
@@ -129,6 +129,7 @@ function OptionsPageContent() {
                   size="sm"
                   variant={type === "call" ? "default" : "outline"}
                   onClick={() => setType("call")}
+                  className="min-h-[44px] min-w-[44px] touch-manipulation sm:min-h-0 sm:min-w-0"
                 >
                   Calls
                 </Button>
@@ -136,6 +137,7 @@ function OptionsPageContent() {
                   size="sm"
                   variant={type === "put" ? "default" : "outline"}
                   onClick={() => setType("put")}
+                  className="min-h-[44px] min-w-[44px] touch-manipulation sm:min-h-0 sm:min-w-0"
                 >
                   Puts
                 </Button>
@@ -144,11 +146,12 @@ function OptionsPageContent() {
                 placeholder="Filter..."
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
-                className="max-w-xs"
+                className="min-h-[44px] w-full touch-manipulation sm:min-h-0 sm:max-w-xs"
               />
             </div>
-            <div className="overflow-auto rounded-md border border-border/50">
-              <Table>
+            <div className="overflow-x-auto rounded-md border border-border/50 overscroll-x-contain [-webkit-overflow-scrolling:touch]">
+              <p className="text-muted-foreground mb-1.5 text-xs sm:hidden">Scroll → for more columns</p>
+              <Table className="min-w-[640px]">
                 <TableHeader>
                   {table.getHeaderGroups().map((hg) => (
                     <TableRow key={hg.id}>

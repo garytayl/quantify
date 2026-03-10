@@ -31,7 +31,7 @@ export default async function StockPage({ params }: Props) {
 
   return (
     <AppShell>
-      <div className="space-y-6 px-4 lg:px-6">
+      <div className="min-w-0 space-y-6 px-4 sm:px-4 lg:px-6">
         <div className="flex flex-wrap items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/dashboard">← Dashboard</Link>
@@ -50,8 +50,8 @@ export default async function StockPage({ params }: Props) {
           </Card>
         ) : (
           <>
-            <div className="grid gap-4 @xl/main:grid-cols-2 @4xl/main:grid-cols-4">
-              <Card className="border-border/50 bg-card">
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 @xl/main:grid-cols-2 @4xl/main:grid-cols-4">
+              <Card className="border-border/50 min-w-0 bg-card">
                 <CardHeader className="pb-1">
                   <p className="text-muted-foreground text-xs font-medium uppercase">Price</p>
                 </CardHeader>
@@ -64,7 +64,7 @@ export default async function StockPage({ params }: Props) {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-border/50 bg-card">
+              <Card className="border-border/50 min-w-0 bg-card">
                 <CardHeader className="pb-1">
                   <p className="text-muted-foreground text-xs font-medium uppercase">Expected move (1W)</p>
                 </CardHeader>
@@ -73,22 +73,22 @@ export default async function StockPage({ params }: Props) {
                   <p className="text-muted-foreground text-xs">1 standard deviation</p>
                 </CardContent>
               </Card>
-              <Card className="border-border/50 bg-card">
+              <Card className="border-border/50 min-w-0 bg-card">
                 <CardHeader className="pb-1">
                   <p className="text-muted-foreground text-xs font-medium uppercase">Options</p>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm" asChild className="min-h-[44px] touch-manipulation sm:min-h-0">
                     <Link href={`/options?ticker=${upper}`}>View chain</Link>
                   </Button>
                 </CardContent>
               </Card>
-              <Card className="border-border/50 bg-card">
+              <Card className="border-border/50 min-w-0 bg-card">
                 <CardHeader className="pb-1">
                   <p className="text-muted-foreground text-xs font-medium uppercase">Scanner</p>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm" asChild className="min-h-[44px] touch-manipulation sm:min-h-0">
                     <Link href="/scanner">Find spreads</Link>
                   </Button>
                 </CardContent>
@@ -105,7 +105,7 @@ export default async function StockPage({ params }: Props) {
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
             {SYMBOLS.filter((s) => s !== upper).map((s) => (
-              <Button key={s} variant="outline" size="sm" asChild>
+              <Button key={s} variant="outline" size="sm" asChild className="min-h-[44px] touch-manipulation sm:min-h-0">
                 <Link href={`/stock/${s}`}>{s}</Link>
               </Button>
             ))}

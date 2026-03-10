@@ -49,7 +49,7 @@ export default function ScannerPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 px-4 lg:px-6">
+      <div className="min-w-0 space-y-6 px-4 lg:px-6">
         <Card className="border-border/50 bg-card">
           <CardHeader>
             <CardTitle>Strategy Scanner</CardTitle>
@@ -61,7 +61,7 @@ export default function ScannerPage() {
             <div className="space-y-2">
               <Label>Ticker</Label>
               <select
-                className="border-input bg-background flex h-9 w-24 rounded-md border px-3 py-1 text-sm"
+                className="border-input bg-background flex h-10 min-h-[44px] w-full rounded-md border px-3 py-2 text-base touch-manipulation sm:h-9 sm:min-h-0 sm:w-24 sm:text-sm"
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value as Ticker)}
               >
@@ -76,7 +76,7 @@ export default function ScannerPage() {
                 type="number"
                 value={maxRisk}
                 onChange={(e) => setMaxRisk(Number(e.target.value))}
-                className="w-28"
+                className="h-10 min-h-[44px] w-full touch-manipulation sm:h-9 sm:min-h-0 sm:w-28"
               />
             </div>
             <div className="space-y-2">
@@ -87,7 +87,7 @@ export default function ScannerPage() {
                 max={95}
                 value={minProb}
                 onChange={(e) => setMinProb(Number(e.target.value))}
-                className="w-28"
+                className="h-10 min-h-[44px] w-full touch-manipulation sm:h-9 sm:min-h-0 sm:w-28"
               />
             </div>
             <div className="space-y-2">
@@ -98,22 +98,25 @@ export default function ScannerPage() {
                 max={60}
                 value={dte}
                 onChange={(e) => setDte(Number(e.target.value))}
-                className="w-28"
+                className="h-10 min-h-[44px] w-full touch-manipulation sm:h-9 sm:min-h-0 sm:w-28"
               />
             </div>
-            <Button onClick={handleScan} disabled={loading}>{loading ? "Scanning…" : "Scan"}</Button>
+            <Button onClick={handleScan} disabled={loading} className="min-h-[44px] touch-manipulation sm:min-h-0">
+              {loading ? "Scanning…" : "Scan"}
+            </Button>
           </CardContent>
         </Card>
 
         {searched && (
           <div>
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              <h2 className="mr-2 text-lg font-semibold">Results</h2>
-              <div className="flex gap-1">
+            <div className="mb-3 flex min-w-0 flex-wrap items-center gap-2">
+              <h2 className="mr-2 shrink-0 text-lg font-semibold">Results</h2>
+              <div className="flex min-h-[44px] flex-wrap gap-1 sm:min-h-0">
                 <Button
                   size="sm"
                   variant={sortBy === "probability" ? "default" : "outline"}
                   onClick={() => setSortBy("probability")}
+                  className="touch-manipulation"
                 >
                   High Probability
                 </Button>
@@ -121,6 +124,7 @@ export default function ScannerPage() {
                   size="sm"
                   variant={sortBy === "credit" ? "default" : "outline"}
                   onClick={() => setSortBy("credit")}
+                  className="touch-manipulation"
                 >
                   High Credit
                 </Button>
@@ -128,6 +132,7 @@ export default function ScannerPage() {
                   size="sm"
                   variant={sortBy === "risk" ? "default" : "outline"}
                   onClick={() => setSortBy("risk")}
+                  className="touch-manipulation"
                 >
                   Low Risk
                 </Button>

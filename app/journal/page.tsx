@@ -114,7 +114,7 @@ export default function JournalPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 px-4 lg:px-6">
+      <div className="min-w-0 space-y-6 px-4 lg:px-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Trade Journal</h1>
@@ -171,7 +171,7 @@ export default function JournalPage() {
           </Dialog>
         </div>
 
-        <div className="grid gap-4 @xl/main:grid-cols-3">
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 @xl/main:grid-cols-3">
           <KpiCard title="Win Rate" value={`${winRate.toFixed(0)}%`} />
           <KpiCard title="Average Return" value={`$${avgReturn.toFixed(0)}`} />
           <KpiCard title="Max Drawdown" value={`$${maxDrawdown.toFixed(0)}`} />

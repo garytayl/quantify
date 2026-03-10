@@ -36,7 +36,7 @@ export function ExpectedMoveChart({
   description = "Price with 1 standard deviation expected move band (weekly)",
 }: ExpectedMoveChartProps) {
   return (
-    <Card className="border-border/50 bg-card">
+    <Card className="border-border/50 min-w-0 bg-card">
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

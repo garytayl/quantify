@@ -14,10 +14,13 @@ export function StockCard({ quote, className }: StockCardProps) {
   const isNegative = quote.change < 0;
 
   return (
-    <Link href={`/stock/${quote.symbol}`} className="block">
+    <Link
+      href={`/stock/${quote.symbol}`}
+      className="block min-w-0 touch-manipulation active:opacity-90"
+    >
       <Card
         className={cn(
-          "border-border/50 bg-card transition-colors hover:border-primary/40 hover:bg-muted/30",
+          "border-border/50 bg-card min-h-[88px] transition-colors hover:border-primary/40 hover:bg-muted/30",
           className
         )}
       >
