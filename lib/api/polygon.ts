@@ -1,9 +1,9 @@
 /**
- * Polygon.io REST API client.
- * All calls are server-side only. Set POLYGON_API_KEY in env.
+ * Massive (formerly Polygon.io) REST API client for market data.
+ * All calls are server-side only. Set POLYGON_API_KEY in env (same key works at massive.com).
  */
 
-const BASE = "https://api.polygon.io";
+const BASE = "https://api.massive.com";
 
 function getApiKey(): string | undefined {
   return process.env.POLYGON_API_KEY;
@@ -33,7 +33,7 @@ async function fetchPolygon<T>(
   const res = await fetch(url, { next: { revalidate: 60 } });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Polygon API ${res.status}: ${text.slice(0, 200)}`);
+    throw new Error(`Massive API ${res.status}: ${text.slice(0, 200)}`);
   }
   return res.json() as Promise<T>;
 }

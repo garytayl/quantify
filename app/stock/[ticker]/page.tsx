@@ -47,7 +47,7 @@ export default async function StockPage({ params }: Props) {
             <CardHeader>
               <CardTitle>No data</CardTitle>
               <CardDescription>
-                Set POLYGON_API_KEY in .env to see live quotes and charts for {upper}.
+                Set POLYGON_API_KEY (get key at massive.com) to see live quotes and charts for {upper}.
               </CardDescription>
             </CardHeader>
           </Card>

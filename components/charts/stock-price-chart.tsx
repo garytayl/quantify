@@ -39,7 +39,7 @@ export function StockPriceChart({ data, ticker }: StockPriceChartProps) {
       <Card className="border-border/50 bg-card">
         <CardHeader>
           <CardTitle className="text-base">{ticker} Price</CardTitle>
-          <CardDescription>No historical data. Add POLYGON_API_KEY for real data.</CardDescription>
+          <CardDescription>No historical data. Add Massive API key (POLYGON_API_KEY) for real data.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-muted-foreground flex h-[280px] items-center justify-center text-sm">

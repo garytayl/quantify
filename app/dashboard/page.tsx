@@ -52,23 +52,24 @@ export default async function DashboardPage() {
             <CardHeader>
               <CardTitle>Connect real data</CardTitle>
               <CardDescription>
-                Add your Polygon.io API key so you can see live quotes, charts, and option chains.
+                Add your Massive (market data) API key to see live quotes, charts, and option chains.
                 No placeholder data is shown.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4 text-sm">
-                Set <code className="rounded bg-muted px-1 py-0.5">POLYGON_API_KEY</code> in your
-                environment (e.g. Vercel project env vars or local <code className="rounded bg-muted px-1 py-0.5">.env.local</code>).
-                Locally, restart the dev server after adding it. On Vercel, refresh the page after saving the variable.
+                Get an API key at <strong>Massive</strong> (market data; same key as before if you had Polygon). Set{" "}
+                <code className="rounded bg-muted px-1 py-0.5">POLYGON_API_KEY</code> in your
+                environment (Vercel env vars or local <code className="rounded bg-muted px-1 py-0.5">.env.local</code>).
+                Locally, restart the dev server after adding it. On Vercel, refresh after saving the variable.
               </p>
               <Button asChild variant="outline" size="sm">
                 <a
-                  href="https://polygon.io"
+                  href="https://massive.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Get API key →
+                  Get API key at Massive →
                 </a>
               </Button>
             </CardContent>
@@ -100,7 +101,7 @@ export default async function DashboardPage() {
                   <p className="text-2xl font-semibold tabular-nums">
                     {vix > 0 ? vix.toFixed(2) : "—"}
                   </p>
-                  <p className="text-muted-foreground text-xs">CBOE Volatility (not from Polygon)</p>
+                  <p className="text-muted-foreground text-xs">CBOE Volatility (not from Massive)</p>
                 </CardContent>
               </Card>
               <Card className="border-border/50 min-w-0 bg-card">
@@ -131,7 +132,7 @@ export default async function DashboardPage() {
               <Card className="border-border/50 bg-card">
                 <CardHeader>
                   <CardTitle className="text-base">Expected move chart</CardTitle>
-                  <CardDescription>No historical band data. Use Polygon for real data.</CardDescription>
+                  <CardDescription>No historical band data. Use Massive for real data.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
