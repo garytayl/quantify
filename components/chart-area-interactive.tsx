@@ -127,16 +127,13 @@ const chartData = [
 ]
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
+  portfolio: {
+    label: "Portfolio",
     color: "var(--primary)",
   },
-  mobile: {
-    label: "Mobile",
-    color: "var(--primary)",
+  spy: {
+    label: "SPY",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
