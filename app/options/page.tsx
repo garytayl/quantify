@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -22,21 +22,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockOptionChains } from "@/lib/market/mock-data";
 import type { OptionContract } from "@/types";
 import { cn } from "@/lib/utils";
 
-type Ticker = keyof typeof mockOptionChains;
+type Ticker = "SPY" | "QQQ" | "IWM";
 
 export default function OptionsPage() {
   const [ticker, setTicker] = useState<Ticker>("SPY");
   const [type, setType] = useState<"call" | "put">("call");
+  const [chain, setChain] = useState<OptionContract[]>([]);
+  const [loading, setLoading] = useState(true);
   const [sorting, setSorting] = useState<SortingState>([{ id: "strike", desc: false }]);
   const [globalFilter, setGlobalFilter] = useState("");
 
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/options/chain?ticker=${ticker}`)
+      .then((res) => res.json())
+      .then((data: OptionContract[]) => {
+        setChain(Array.isArray(data) ? data : []);
+      })
+      .catch(() => setChain([]))
+      .finally(() => setLoading(false));
+  }, [ticker]);
+
   const data = useMemo(() => {
-    return mockOptionChains[ticker].filter((c) => c.type === type);
-  }, [ticker, type]);
+    return chain.filter((c) => c.type === type);
+  }, [chain, type]);
 
   const columns: ColumnDef<OptionContract>[] = useMemo(
     () => [
@@ -142,15 +154,29 @@ export default function OptionsPage() {
                   ))}
                 </TableHeader>
                 <TableBody>
-                  {table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className={cn(cell.column.id === "actions" && "w-0")}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                      ))}
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-muted-foreground py-8 text-center">
+                        Loading chain…
+                      </TableCell>
                     </TableRow>
-                  ))}
+                  ) : table.getRowModel().rows.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-muted-foreground py-8 text-center">
+                        No options for this ticker.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id} className={cn(cell.column.id === "actions" && "w-0")}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>

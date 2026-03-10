@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { runScanner } from "@/lib/calculations/scanner";
 import type { StrategyResult } from "@/types";
 
 type Ticker = "SPY" | "QQQ" | "IWM";
@@ -19,17 +18,27 @@ export default function ScannerPage() {
   const [dte, setDte] = useState(14);
   const [results, setResults] = useState<StrategyResult[]>([]);
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState<"probability" | "credit" | "risk">("probability");
 
-  function handleScan() {
-    const r = runScanner({
-      ticker,
-      maxRisk,
-      minProbability: minProb,
-      daysToExpiration: dte,
-    });
-    setResults(r);
-    setSearched(true);
+  async function handleScan() {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        ticker,
+        maxRisk: String(maxRisk),
+        minProb: String(minProb),
+        dte: String(dte),
+      });
+      const res = await fetch(`/api/scan?${params}`);
+      const r = (await res.json()) as StrategyResult[];
+      setResults(Array.isArray(r) ? r : []);
+    } catch {
+      setResults([]);
+    } finally {
+      setLoading(false);
+      setSearched(true);
+    }
   }
 
   const displayedResults = [...results].sort((a, b) => {
@@ -92,7 +101,7 @@ export default function ScannerPage() {
                 className="w-28"
               />
             </div>
-            <Button onClick={handleScan}>Scan</Button>
+            <Button onClick={handleScan} disabled={loading}>{loading ? "Scanning…" : "Scan"}</Button>
           </CardContent>
         </Card>
 

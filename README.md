@@ -23,7 +23,7 @@ AI-powered trading dashboard for smarter short-term options and stock decisions.
 - **app/journal** — Trade journal: log trades; win rate, avg return, max drawdown; history table
 - **app/risk** — Risk dashboard: capital, open risk, max risk/trade, profit this month, win rate; P/L chart, risk pie
 - **lib/calculations** — `options.ts` (expected move, POP, spread math), `scanner.ts`
-- **lib/market** — Mock data (SPY, QQQ, IWM + option chains)
+- **lib/market** — Data layer: Polygon.io when `POLYGON_API_KEY` is set, else mock (SPY, QQQ, IWM + option chains)
 - **lib/store** — Zustand (journal entries, risk snapshot)
 
 ## Run locally
@@ -34,6 +34,22 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000); you’ll be redirected to `/dashboard`.
+
+## Real data (Polygon.io)
+
+Without an API key, the app uses **mock data**. To use live quotes and option chains:
+
+1. Get an API key at [polygon.io](https://polygon.io).
+2. Copy `.env.example` to `.env` and set `POLYGON_API_KEY=your_key`.
+3. Restart the dev server.
+
+Then:
+
+- **Dashboard** — SPY/QQQ/IWM prices and change % come from Polygon stock snapshots + previous close.
+- **Scanner** — Option chain is fetched from Polygon; strategies are computed from real bids/asks and greeks.
+- **Options chain** — Fetched from Polygon (strike, bid, ask, delta, IV, volume, open interest).
+
+VIX and the expected-move **chart** (historical band) still use mock data; the single **expected move (1W)** value is computed from spot and a default IV.
 
 ## Next steps (ideas)
 

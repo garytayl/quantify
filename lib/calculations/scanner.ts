@@ -3,33 +3,46 @@ import {
   calculateBearCallSpread,
   calculateIronCondor,
 } from "./options";
-import type { StrategyResult, SpreadStrategyType } from "@/types";
+import type { OptionContract, StrategyResult } from "@/types";
 import { mockOptionChains } from "@/lib/market/mock-data";
 
-type TickerKey = keyof typeof mockOptionChains;
+export type TickerKey = "SPY" | "QQQ" | "IWM";
 
-interface ScannerInput {
+export interface ScannerInput {
   ticker: TickerKey;
   maxRisk: number;
   minProbability: number;
   daysToExpiration: number;
 }
 
-function getSpot(ticker: TickerKey): number {
+function getSpotFromMock(ticker: TickerKey): number {
   const spots: Record<TickerKey, number> = { SPY: 503.21, QQQ: 442.18, IWM: 198.45 };
   return spots[ticker] ?? 500;
 }
 
-export function runScanner(input: ScannerInput): StrategyResult[] {
-  const chain = mockOptionChains[input.ticker];
-  const spot = getSpot(input.ticker);
+/** Run scanner with a provided chain and spot (e.g. from Polygon). */
+export function runScannerWithChain(
+  chain: OptionContract[],
+  spot: number,
+  input: Omit<ScannerInput, "ticker"> & { ticker: string }
+): StrategyResult[] {
   const results: StrategyResult[] = [];
   const dte = input.daysToExpiration;
 
   const puts = chain.filter((c) => c.type === "put").sort((a, b) => b.strike - a.strike);
   const calls = chain.filter((c) => c.type === "call").sort((a, b) => a.strike - b.strike);
+  _findSpreads(puts, calls, spot, dte, input, results);
+  return _sortAndFallback(results, input);
+}
 
-  // Bull put: sell put above spot, buy put below (e.g. sell 498, buy 493)
+function _findSpreads(
+  puts: OptionContract[],
+  calls: OptionContract[],
+  spot: number,
+  dte: number,
+  input: ScannerInput,
+  results: StrategyResult[]
+): void {
   for (let i = 0; i < puts.length - 1; i++) {
     const sellPut = puts[i];
     const buyPut = puts[i + 1];
@@ -59,8 +72,6 @@ export function runScanner(input: ScannerInput): StrategyResult[] {
       }
     }
   }
-
-  // Bear call: sell call below spot, buy call above
   for (let i = 0; i < calls.length - 1; i++) {
     const sellCall = calls[i];
     const buyCall = calls[i + 1];
@@ -90,8 +101,6 @@ export function runScanner(input: ScannerInput): StrategyResult[] {
       }
     }
   }
-
-  // Iron condor: OTM put spread + OTM call spread
   const putOtm = puts.filter((p) => p.strike < spot);
   const callOtm = calls.filter((c) => c.strike > spot);
   for (let i = 0; i < Math.min(putOtm.length - 1, callOtm.length - 1); i++) {
@@ -131,11 +140,12 @@ export function runScanner(input: ScannerInput): StrategyResult[] {
       });
     }
   }
+}
 
+function _sortAndFallback(results: StrategyResult[], input: ScannerInput): StrategyResult[] {
   const sorted = results
-  .sort((a, b) => b.probabilityOfProfit - a.probabilityOfProfit)
-  .slice(0, 12);
-
+    .sort((a, b) => b.probabilityOfProfit - a.probabilityOfProfit)
+    .slice(0, 12);
   if (sorted.length === 0) {
     return [
       {
@@ -156,3 +166,15 @@ export function runScanner(input: ScannerInput): StrategyResult[] {
   }
   return sorted;
 }
+
+export function runScanner(input: ScannerInput): StrategyResult[] {
+  const chain = mockOptionChains[input.ticker as keyof typeof mockOptionChains] ?? [];
+  const spot = getSpotFromMock(input.ticker);
+  const results: StrategyResult[] = [];
+  const dte = input.daysToExpiration;
+  const puts = chain.filter((c) => c.type === "put").sort((a, b) => b.strike - a.strike);
+  const calls = chain.filter((c) => c.type === "call").sort((a, b) => a.strike - b.strike);
+  _findSpreads(puts, calls, spot, dte, input, results);
+  return _sortAndFallback(results, input);
+}
+
