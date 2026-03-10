@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SYMBOLS, getSpot, getIndexQuotes, getExpectedMoveWeekly, getStockBars } from "@/lib/market/data";
 
+/** Always run on the server per request so POLYGON_API_KEY is read at runtime (e.g. Vercel env vars). */
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ ticker: string }> };
 
 export default async function StockPage({ params }: Props) {

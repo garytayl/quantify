@@ -18,6 +18,9 @@ import {
   getExpectedMoveBands,
 } from "@/lib/market/data";
 
+/** Always run on the server per request so POLYGON_API_KEY is read at runtime (e.g. Vercel env vars). */
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const [quotes, vix, chain, spot] = await Promise.all([
     getIndexQuotes(),
@@ -49,14 +52,15 @@ export default async function DashboardPage() {
             <CardHeader>
               <CardTitle>Connect real data</CardTitle>
               <CardDescription>
-                Add your Polygon.io API key to .env to see live quotes, charts, and option chains.
+                Add your Polygon.io API key so you can see live quotes, charts, and option chains.
                 No placeholder data is shown.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4 text-sm">
-                Set <code className="rounded bg-muted px-1 py-0.5">POLYGON_API_KEY</code> then
-                restart the dev server.
+                Set <code className="rounded bg-muted px-1 py-0.5">POLYGON_API_KEY</code> in your
+                environment (e.g. Vercel project env vars or local <code className="rounded bg-muted px-1 py-0.5">.env.local</code>).
+                Locally, restart the dev server after adding it. On Vercel, refresh the page after saving the variable.
               </p>
               <Button asChild variant="outline" size="sm">
                 <a
