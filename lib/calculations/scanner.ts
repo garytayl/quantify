@@ -4,7 +4,6 @@ import {
   calculateIronCondor,
 } from "./options";
 import type { OptionContract, StrategyResult } from "@/types";
-import { mockOptionChains } from "@/lib/market/mock-data";
 
 export type TickerKey = "SPY" | "QQQ" | "IWM";
 
@@ -15,10 +14,6 @@ export interface ScannerInput {
   daysToExpiration: number;
 }
 
-function getSpotFromMock(ticker: TickerKey): number {
-  const spots: Record<TickerKey, number> = { SPY: 503.21, QQQ: 442.18, IWM: 198.45 };
-  return spots[ticker] ?? 500;
-}
 
 /** Run scanner with a provided chain and spot (e.g. from Polygon). */
 export function runScannerWithChain(
@@ -32,7 +27,7 @@ export function runScannerWithChain(
   const puts = chain.filter((c) => c.type === "put").sort((a, b) => b.strike - a.strike);
   const calls = chain.filter((c) => c.type === "call").sort((a, b) => a.strike - b.strike);
   _findSpreads(puts, calls, spot, dte, input, results);
-  return _sortAndFallback(results, input);
+  return _sortResults(results);
 }
 
 function _findSpreads(
@@ -142,39 +137,13 @@ function _findSpreads(
   }
 }
 
-function _sortAndFallback(results: StrategyResult[], input: ScannerInput): StrategyResult[] {
-  const sorted = results
+function _sortResults(results: StrategyResult[]): StrategyResult[] {
+  return results
     .sort((a, b) => b.probabilityOfProfit - a.probabilityOfProfit)
     .slice(0, 12);
-  if (sorted.length === 0) {
-    return [
-      {
-        id: "demo-bull-put",
-        type: "bull_put",
-        ticker: input.ticker,
-        legs: [
-          { strike: 492, type: "put", action: "sell", premium: 1.35, delta: -0.26 },
-          { strike: 487, type: "put", action: "buy", premium: 0.85, delta: -0.18 },
-        ],
-        credit: 0.5,
-        maxRisk: 450,
-        probabilityOfProfit: 0.74,
-        riskReward: 2.7,
-        daysToExpiration: input.daysToExpiration,
-      },
-    ];
-  }
-  return sorted;
 }
 
 export function runScanner(input: ScannerInput): StrategyResult[] {
-  const chain = mockOptionChains[input.ticker as keyof typeof mockOptionChains] ?? [];
-  const spot = getSpotFromMock(input.ticker);
-  const results: StrategyResult[] = [];
-  const dte = input.daysToExpiration;
-  const puts = chain.filter((c) => c.type === "put").sort((a, b) => b.strike - a.strike);
-  const calls = chain.filter((c) => c.type === "call").sort((a, b) => a.strike - b.strike);
-  _findSpreads(puts, calls, spot, dte, input, results);
-  return _sortAndFallback(results, input);
+  return [];
 }
 

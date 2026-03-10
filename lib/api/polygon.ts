@@ -69,6 +69,41 @@ export async function getStockPrevClose(ticker: string): Promise<number | null> 
   }
 }
 
+// --- Stock aggregates range (for charts) ---
+export interface PolygonAggBar {
+  o: number;
+  h: number;
+  l: number;
+  c: number;
+  v: number;
+  vw?: number;
+  t: number;
+  n?: number;
+}
+
+export interface PolygonAggsRangeResponse {
+  ticker: string;
+  results?: PolygonAggBar[];
+  status?: string;
+}
+
+export async function getStockAggsRange(
+  ticker: string,
+  from: string,
+  to: string,
+  timespan: "day" | "week" = "day",
+  multiplier = 1
+): Promise<PolygonAggBar[]> {
+  try {
+    const data = await fetchPolygon<PolygonAggsRangeResponse>(
+      `/v2/aggs/ticker/${encodeURIComponent(ticker)}/range/${multiplier}/${timespan}/${from}/${to}`
+    );
+    return data.results ?? [];
+  } catch {
+    return [];
+  }
+}
+
 // --- Stock snapshot (last trade, last quote, day bar) ---
 export interface PolygonStockSnapshot {
   ticker?: string;

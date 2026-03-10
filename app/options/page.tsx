@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { Suspense, useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -28,8 +29,13 @@ import { cn } from "@/lib/utils";
 
 type Ticker = "SPY" | "QQQ" | "IWM";
 
-export default function OptionsPage() {
-  const [ticker, setTicker] = useState<Ticker>("SPY");
+const TICKERS: Ticker[] = ["SPY", "QQQ", "IWM"];
+
+function OptionsPageContent() {
+  const searchParams = useSearchParams();
+  const tickerParam = searchParams.get("ticker")?.toUpperCase();
+  const initialTicker = TICKERS.includes(tickerParam as Ticker) ? (tickerParam as Ticker) : "SPY";
+  const [ticker, setTicker] = useState<Ticker>(initialTicker);
   const [type, setType] = useState<"call" | "put">("call");
   const [chain, setChain] = useState<OptionContract[]>([]);
   const [loading, setLoading] = useState(true);
@@ -185,5 +191,19 @@ export default function OptionsPage() {
         </Card>
       </div>
     </AppShell>
+  );
+}
+
+export default function OptionsPage() {
+  return (
+    <Suspense fallback={
+      <AppShell>
+        <div className="flex min-h-[40vh] items-center justify-center px-4">
+          <p className="text-muted-foreground">Loading options…</p>
+        </div>
+      </AppShell>
+    }>
+      <OptionsPageContent />
+    </Suspense>
   );
 }

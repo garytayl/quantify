@@ -1,80 +1,78 @@
 /**
- * Unified market data: Polygon when configured, mock otherwise.
+ * Market data: Polygon only. No placeholder/mock data.
  */
 
 import { isPolygonConfigured } from "@/lib/api/polygon";
+import { getStockAggsRange } from "@/lib/api/polygon";
 import { fetchIndexQuotes, fetchOptionChain } from "@/lib/market/polygon-data";
-import {
-  mockIndexQuotes,
-  mockVIX,
-  mockExpectedMoveWeekly,
-  mockSPYExpectedMoveBands,
-  mockOptionChains,
-} from "@/lib/market/mock-data";
 import { calculateExpectedMove } from "@/lib/calculations/options";
-import type { IndexQuote, OptionContract, ExpectedMoveBand } from "@/types";
+import type { IndexQuote, OptionContract } from "@/types";
 
-const INDEX_SYMBOLS = ["SPY", "QQQ", "IWM"] as const;
-type TickerKey = (typeof INDEX_SYMBOLS)[number];
+export const SYMBOLS = ["SPY", "QQQ", "IWM"] as const;
+export type SymbolTicker = (typeof SYMBOLS)[number];
 
-function isTickerKey(s: string): s is TickerKey {
-  return INDEX_SYMBOLS.includes(s as TickerKey);
+function isSymbol(s: string): s is SymbolTicker {
+  return SYMBOLS.includes(s as SymbolTicker);
 }
 
-/** Index quotes (SPY, QQQ, IWM). Real from Polygon or mock. */
+/** Index quotes (SPY, QQQ, IWM). Empty if Polygon not configured or fetch fails. */
 export async function getIndexQuotes(): Promise<IndexQuote[]> {
-  if (isPolygonConfigured()) {
-    const real = await fetchIndexQuotes();
-    if (real?.length) return real;
-  }
-  return mockIndexQuotes;
+  if (!isPolygonConfigured()) return [];
+  const real = await fetchIndexQuotes();
+  return real ?? [];
 }
 
-/** VIX. Polygon does not expose CBOE VIX; use mock until we add another source. */
+/** VIX. Polygon doesn't provide it; returns 0 so UI can show "—" or N/A. */
 export async function getVIX(): Promise<number> {
-  return mockVIX;
+  return 0;
 }
 
-/** Expected move (1 week) in dollars for a given spot and optional IV. */
+/** Expected move (1 week) in dollars. */
 export function getExpectedMoveWeekly(spot: number, iv = 0.14): number {
+  if (!spot) return 0;
   return calculateExpectedMove(spot, iv, 7);
 }
 
-/** Expected move bands for chart (date, price, upper, lower). Mock for now. */
-export function getSPYExpectedMoveBands(): ExpectedMoveBand[] {
-  return mockSPYExpectedMoveBands;
+/** No mock bands. Returns empty; chart shows empty state. */
+export function getExpectedMoveBands(): { date: string; price: number; upper: number; lower: number }[] {
+  return [];
 }
 
-/** Option chain for ticker. Real from Polygon or mock. */
-export async function getOptionChain(
-  ticker: string
-): Promise<OptionContract[]> {
-  if (!isPolygonConfigured() || !isTickerKey(ticker)) {
-    return mockOptionChains[ticker as keyof typeof mockOptionChains] ?? [];
-  }
+/** Option chain. Empty if no Polygon or not a known symbol. */
+export async function getOptionChain(ticker: string): Promise<OptionContract[]> {
+  if (!isPolygonConfigured()) return [];
+  if (!isSymbol(ticker)) return [];
   const now = new Date();
   const gte = now.toISOString().slice(0, 10);
-  const lte = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
+  const lte = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   try {
-    const contracts = await fetchOptionChain(ticker, gte, lte);
-    if (contracts.length > 0) return contracts;
+    return await fetchOptionChain(ticker, gte, lte);
   } catch {
-    // fallback
+    return [];
   }
-  return mockOptionChains[ticker as keyof typeof mockOptionChains] ?? [];
 }
 
-/** Spot price for a ticker (from index quotes or first option underlying). */
+/** Spot price. 0 when no data. */
 export async function getSpot(ticker: string): Promise<number> {
   const quotes = await getIndexQuotes();
   const q = quotes.find((x) => x.symbol === ticker);
-  if (q) return q.price;
-  const fallback: Record<string, number> = {
-    SPY: 503.21,
-    QQQ: 442.18,
-    IWM: 198.45,
-  };
-  return fallback[ticker] ?? 500;
+  return q?.price ?? 0;
+}
+
+/** Daily bars for chart. from/to = YYYY-MM-DD. */
+export async function getStockBars(
+  ticker: string,
+  from: string,
+  to: string
+): Promise<{ date: string; open: number; high: number; low: number; close: number; volume: number }[]> {
+  if (!isPolygonConfigured()) return [];
+  const bars = await getStockAggsRange(ticker, from, to);
+  return bars.map((b) => ({
+    date: new Date(b.t).toISOString().slice(0, 10),
+    open: b.o,
+    high: b.h,
+    low: b.l,
+    close: b.c,
+    volume: b.v,
+  }));
 }
