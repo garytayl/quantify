@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import {
   IconDots,
   IconFolder,
@@ -43,10 +44,10 @@ export function NavDocuments({
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -63,16 +64,20 @@ export function NavDocuments({
                 side={isMobile ? "bottom" : "right"}
                 align={isMobile ? "end" : "start"}
               >
-                <DropdownMenuItem>
-                  <IconFolder />
-                  <span>Open</span>
+                <DropdownMenuItem asChild>
+                  <Link href={item.url}>
+                    <IconFolder />
+                    <span>Open</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IconShare3 />
-                  <span>Share</span>
+                <DropdownMenuItem asChild>
+                  <Link href="/journal">
+                    <IconShare3 />
+                    <span>Journal</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem variant="destructive" disabled>
                   <IconTrash />
                   <span>Delete</span>
                 </DropdownMenuItem>
@@ -81,9 +86,11 @@ export function NavDocuments({
           </SidebarMenuItem>
         ))}
         <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <IconDots className="text-sidebar-foreground/70" />
-            <span>More</span>
+          <SidebarMenuButton asChild className="text-sidebar-foreground/70">
+            <Link href="/scanner">
+              <IconDots className="text-sidebar-foreground/70" />
+              <span>More</span>
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

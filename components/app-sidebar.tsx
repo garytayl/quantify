@@ -43,12 +43,12 @@ const data = {
   ],
   navClouds: [],
   navSecondary: [
-    { title: "Settings", url: "#", icon: IconSettings },
-    { title: "Get Help", url: "#", icon: IconHelp },
-    { title: "Search", url: "#", icon: IconSearch },
+    { title: "Settings", url: "/dashboard", icon: IconSettings },
+    { title: "Get Help", url: "/dashboard", icon: IconHelp },
+    { title: "Search", url: "/scanner", icon: IconSearch },
   ],
   documents: [
-    { name: "Open Positions", url: "#", icon: IconTrendingUp },
+    { name: "Open Positions", url: "/options", icon: IconTrendingUp },
     { name: "Trade History", url: "/journal", icon: IconChartBar },
   ],
 }

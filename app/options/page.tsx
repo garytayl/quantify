@@ -10,6 +10,7 @@ import {
   flexRender,
   SortingState,
 } from "@tanstack/react-table";
+import Link from "next/link";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,13 +71,13 @@ export default function OptionsPage() {
       {
         id: "actions",
         header: "",
-        cell: ({ row }) => (
+        cell: () => (
           <div className="flex gap-1">
-            <Button size="sm" variant="outline">
-              Build Spread
+            <Button size="sm" variant="outline" asChild>
+              <Link href="/scanner">Build Spread</Link>
             </Button>
-            <Button size="sm" variant="ghost">
-              Add to Strategy
+            <Button size="sm" variant="ghost" asChild>
+              <Link href="/scanner">Add to Strategy</Link>
             </Button>
           </div>
         ),
